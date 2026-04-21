@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Checker - Accessibility Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>UX Accessibility Checker</h1>
+        <p>Analyze UI/UX interfaces for visual accessibility</p>
+    </header>
+
+    <main class="container">
+        <!-- Left Column: Controls -->
+        <aside class="controls-panel">
+            <section class="control-group">
+                <h2>Analysis Type</h2>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="analysisType" value="single" checked>
+                        Single Analysis
+                    </label>
+                    <label>
+                        <input type="radio" name="analysisType" value="complete">
+                        Complete Spectrum
+                    </label>
+                </div>
+            </section>
+
+            <section class="control-group">
+                <h2>Visual Disability Type</h2>
+                <div class="checkbox-group" id="disabilityOptions">
+                    
+                    <div class="disability-category">
+                        <h3 class="category-title top-category">Color Vision Deficiency</h3>
+                        <div class="category-items">
+                            <label>
+                                <input type="checkbox" name="disability" value="protanopia" checked>
+                                Protanopia (Red-Blind)
+                            </label>
+                            <label>
+                                <input type="checkbox" name="disability" value="deuteranopia">
+                                Deuteranopia (Green-Blind)
+                            </label>
+                            <label>
+                                <input type="checkbox" name="disability" value="tritanopia">
+                                Tritanopia (Blue-Blind)
+                            </label>
+                            <label>
+                                <input type="checkbox" name="disability" value="achromatopsia">
+                                Achromatopsia (Total Color Blind)
+                            </label>
+                        </div>
+                        <h3 class="category-title">Contrast & Readability</h3>
+                        <div class="category-items">
+                            <label>
+                                <input type="checkbox" name="disability" value="lowContrast">
+                                Low Contrast Analysis
+                            </label>
+                            <label>
+                                <input type="checkbox" name="disability" value="lowVision">
+                                Low Vision Simulation
+                            </label>
+                        </div>
+                        <h3 class="category-title">Seizure & Photosensitivity</h3>
+                        <div class="category-items">
+                            <label>
+                                <input type="checkbox" name="disability" value="epilepsy">
+                                Photosensitive Epilepsy
+                            </label>
+                            <label>
+                                <input type="checkbox" name="disability" value="flashingContent">
+                                Flashing Content Detection
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="control-group">
+                <h2>Display Options</h2>
+                <div class="toggle-wrapper">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="sliderComparison">
+                        <span class="toggle-switch"></span>
+                        Slider Comparison Mode
+                    </label>
+                </div>
+            </section>
+
+            <section class="control-group">
+                <button id="analyzeButton" class="btn-primary">Analyze Image</button>
+                <button id="resetButton" class="btn-secondary">Reset</button>
+            </section>
+        </aside>
+
+        <!-- Right Column: Image Drop Zone & Results -->
+        <section class="display-panel">
+            <div id="dropZone" class="drop-zone">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/>
+                </svg>
+                <p>Drop image here or click to upload</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+
+            <div id="resultsContainer" class="results-container" style="display: none;">
+                <!-- Single Analysis Results -->
+                <div id="singleResult" class="single-result-view" style="display: none;">
+                    <div class="comparison-wrapper">
+                        <div class="processed-image">
+                            <canvas id="processedCanvas"></canvas>
+                            <label class="image-label">Processed</label>
+                        </div>
+                        <div class="original-image-small">
+                            <canvas id="originalCanvasSmall"></canvas>
+                            <label class="image-label">Original</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Slider Comparison -->
+                    <div id="sliderContainer" class="slider-container" style="display: none;">
+                        <div class="slider-wrapper">
+                            <canvas id="sliderCanvasBottom"></canvas>
+                            <div class="slider-overlay">
+                                <canvas id="sliderCanvasTop"></canvas>
+                            </div>
+                            <input type="range" class="image-slider" id="imageSlider" min="0" max="100" value="50">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Analysis Results -->
+                <div id="completeResult" class="complete-result-view" style="display: none;">
+                    <div class="analysis-grid">
+                        <div class="analysis-item">
+                            <canvas id="originalCanvas"></canvas>
+                            <label class="image-label">Original</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Report -->
+                <div id="analysisReport" class="analysis-report">
+                    <h3>Analysis Report</h3>
+                    <div id="reportContent"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
