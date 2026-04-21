@@ -5,6 +5,12 @@ let selectedDisabilities = ['protanopia'];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+    // Check which analysis mode is selected in the DOM
+    const checkedAnalysisType = document.querySelector('input[name="analysisType"]:checked');
+    if (checkedAnalysisType) {
+        analysisMode = checkedAnalysisType.value;
+    }
+    
     initializeEventListeners();
     updateDisabilityOptions();
 });
@@ -28,9 +34,12 @@ function initializeEventListeners() {
         radio.addEventListener('change', handleAnalysisTypeChange);
     });
     
-    // Disability checkboxes
-    document.querySelectorAll('input[name="disability"]').forEach(checkbox => {
-        checkbox.addEventListener('change', handleDisabilityChange);
+    // Disability checkboxes - use event delegation on parent
+    const disabilityContainer = document.getElementById('disabilityOptions');
+    disabilityContainer.addEventListener('change', (e) => {
+        if (e.target.matches('input[type="checkbox"], input[type="radio"]')) {
+            handleDisabilityChange(e);
+        }
     });
     
     // Slider comparison toggle
@@ -166,22 +175,32 @@ function handleAnalysisTypeChange(e) {
 }
 
 function updateDisabilityOptions() {
-    const checkboxes = document.querySelectorAll('input[name="disability"]');
+    const checkboxes = document.querySelectorAll('input[name="disability"], input[name="disabilitySingle"]');
     
     if (analysisMode === 'single') {
         // Single mode: only one disability can be selected
+        const currentValue = selectedDisabilities[0] || checkboxes[0]?.value;
         checkboxes.forEach(cb => {
             cb.type = 'radio';
             cb.name = 'disabilitySingle';
+            cb.checked = (cb.value === currentValue);
         });
-        checkboxes[0].checked = true;
-        selectedDisabilities = [checkboxes[0].value];
+        selectedDisabilities = [currentValue];
     } else {
         // Complete mode: multiple disabilities can be selected
+        // Preserve checked state when switching from single mode
+        const wasChecked = new Set();
+        checkboxes.forEach(cb => {
+            if (cb.checked) wasChecked.add(cb.value);
+        });
+        
         checkboxes.forEach(cb => {
             cb.type = 'checkbox';
             cb.name = 'disability';
+            // Keep current selection (allow none)
+            cb.checked = wasChecked.has(cb.value);
         });
+        
         updateSelectedDisabilities();
     }
 }
@@ -195,8 +214,21 @@ function handleDisabilityChange(e) {
 }
 
 function updateSelectedDisabilities() {
-    selectedDisabilities = Array.from(document.querySelectorAll('input[name="disability"]:checked'))
+    const selector = analysisMode === 'single' 
+        ? 'input[name="disabilitySingle"]:checked' 
+        : 'input[name="disability"]:checked';
+    selectedDisabilities = Array.from(document.querySelectorAll(selector))
         .map(cb => cb.value);
+    
+    // In single mode, ensure at least one is selected
+    if (analysisMode === 'single' && selectedDisabilities.length === 0) {
+        const firstCheckbox = document.querySelector('input[name="disabilitySingle"]');
+        if (firstCheckbox) {
+            firstCheckbox.checked = true;
+            selectedDisabilities = [firstCheckbox.value];
+        }
+    }
+    // In complete mode, allow empty selection
 }
 
 // Slider comparison toggle
@@ -250,7 +282,15 @@ function performAnalysis() {
 }
 
 function performSingleAnalysis() {
+    // Update selected disability before analysis
+    updateSelectedDisabilities();
+    
     const disability = selectedDisabilities[0];
+    if (!disability) {
+        console.warn('No disability selected for single analysis');
+        return;
+    }
+    
     const sliderEnabled = document.getElementById('sliderComparison').checked;
     
     // Render processed image
@@ -306,11 +346,14 @@ function performCompleteAnalysis() {
     const grid = document.querySelector('.analysis-grid');
     grid.innerHTML = '';
     
+    // Update selected disabilities before analysis
+    updateSelectedDisabilities();
+    
     // Add original image
     const originalItem = createAnalysisItem('Original', currentImage, null);
     grid.appendChild(originalItem);
     
-    // Add each selected disability
+    // Add each selected disability (if any)
     selectedDisabilities.forEach(disability => {
         const item = createAnalysisItem(getDisabilityLabel(disability), currentImage, disability);
         grid.appendChild(item);
@@ -480,6 +523,11 @@ function applyLowVision(canvas, ctx, data) {
 function generateReport() {
     const reportContent = document.getElementById('reportContent');
     reportContent.innerHTML = '';
+    
+    if (selectedDisabilities.length === 0) {
+        reportContent.innerHTML = '<p style="color: var(--text-secondary); font-style: italic;">No accessibility checks selected. Select one or more disability types to generate a report.</p>';
+        return;
+    }
     
     selectedDisabilities.forEach(disability => {
         const item = createReportItem(disability);
