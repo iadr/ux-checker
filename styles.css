@@ -498,16 +498,18 @@ header p {
 .slider-label-left,
 .slider-label-right {
     font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .slider-label-left {
     text-align: left;
+    color: var(--primary-color);
 }
 
 .slider-label-right {
     text-align: right;
+    color: var(--secondary-color);
 }
 
 /* Complete Result View */

@@ -275,18 +275,18 @@ function performSingleAnalysis() {
 function updateSliderComparison() {
     const disability = selectedDisabilities[0];
     
-    // Bottom canvas (original - left side)
+    // Bottom canvas (processed - shows on left when slider at 0%)
     const bottomCanvas = document.getElementById('sliderCanvasBottom');
-    renderOriginal(currentImage, bottomCanvas);
+    applyFilter(currentImage, bottomCanvas, disability);
     
-    // Top canvas (processed - right side in overlay)
+    // Top canvas (original - in overlay, revealed from left as slider moves right)
     // Must match bottom canvas dimensions exactly
     const topCanvas = document.getElementById('sliderCanvasTop');
     topCanvas.width = bottomCanvas.width;
     topCanvas.height = bottomCanvas.height;
     
-    // Apply the filter to the top canvas
-    applyFilter(currentImage, topCanvas, disability);
+    // Render original to the top canvas
+    renderOriginal(currentImage, topCanvas);
     
     // Set the display width to match the bottom canvas displayed width
     const bottomRect = bottomCanvas.getBoundingClientRect();
