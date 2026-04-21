@@ -134,7 +134,21 @@
                             <div class="slider-overlay">
                                 <canvas id="sliderCanvasTop"></canvas>
                             </div>
+                            <div class="slider-handle">
+                                <div class="slider-line"></div>
+                                <div class="slider-button">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M15 18l-6-6 6-6"/>
+                                        <path d="M9 18l6-6-6-6"/>
+                                    </svg>
+                                </div>
+                                <div class="slider-line"></div>
+                            </div>
                             <input type="range" class="image-slider" id="imageSlider" min="0" max="100" value="50">
+                        </div>
+                        <div class="slider-labels">
+                            <span class="slider-label-left">Original</span>
+                            <span class="slider-label-right">Processed</span>
                         </div>
                     </div>
                 </div>

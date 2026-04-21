@@ -220,7 +220,10 @@ function handleSliderToggle(e) {
 function handleSliderMove(e) {
     const percentage = e.target.value;
     const overlay = document.querySelector('.slider-overlay');
+    const handle = document.querySelector('.slider-handle');
+    
     overlay.style.width = percentage + '%';
+    handle.style.left = percentage + '%';
 }
 
 // Main analysis function
@@ -272,13 +275,31 @@ function performSingleAnalysis() {
 function updateSliderComparison() {
     const disability = selectedDisabilities[0];
     
-    // Bottom canvas (processed)
+    // Bottom canvas (original - left side)
     const bottomCanvas = document.getElementById('sliderCanvasBottom');
-    applyFilter(currentImage, bottomCanvas, disability);
+    renderOriginal(currentImage, bottomCanvas);
     
-    // Top canvas (original)
+    // Top canvas (processed - right side in overlay)
+    // Must match bottom canvas dimensions exactly
     const topCanvas = document.getElementById('sliderCanvasTop');
-    renderOriginal(currentImage, topCanvas);
+    topCanvas.width = bottomCanvas.width;
+    topCanvas.height = bottomCanvas.height;
+    
+    // Apply the filter to the top canvas
+    applyFilter(currentImage, topCanvas, disability);
+    
+    // Set the display width to match the bottom canvas displayed width
+    const bottomRect = bottomCanvas.getBoundingClientRect();
+    topCanvas.style.width = bottomRect.width + 'px';
+    topCanvas.style.height = bottomRect.height + 'px';
+    
+    // Reset slider position
+    const slider = document.getElementById('imageSlider');
+    const overlay = document.querySelector('.slider-overlay');
+    const handle = document.querySelector('.slider-handle');
+    
+    overlay.style.width = slider.value + '%';
+    handle.style.left = slider.value + '%';
 }
 
 function performCompleteAnalysis() {
