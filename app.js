@@ -49,6 +49,24 @@ function initializeEventListeners() {
     document.getElementById('analyzeButton').addEventListener('click', performAnalysis);
     document.getElementById('resetButton').addEventListener('click', resetApp);
     
+    // Knowledge Base button and modal
+    document.getElementById('knowledgeBaseButton').addEventListener('click', openKnowledgeBase);
+    document.getElementById('closeModalButton').addEventListener('click', closeKnowledgeBase);
+    
+    // Knowledge Base navigation - use event delegation
+    document.querySelector('.kb-navigation').addEventListener('click', (e) => {
+        if (e.target.classList.contains('kb-nav-btn')) {
+            handleKnowledgeBaseNav(e);
+        }
+    });
+    
+    // Close modal when clicking outside
+    document.getElementById('knowledgeBaseModal').addEventListener('click', (e) => {
+        if (e.target.id === 'knowledgeBaseModal') {
+            closeKnowledgeBase();
+        }
+    });
+    
     // Image slider
     document.getElementById('imageSlider').addEventListener('input', handleSliderMove);
 }
@@ -999,4 +1017,45 @@ function resetApp() {
     analysisMode = 'single';
     document.querySelector('input[value="single"]').checked = true;
     updateDisabilityOptions();
+}
+
+// Knowledge Base Functions
+function openKnowledgeBase() {
+    const modal = document.getElementById('knowledgeBaseModal');
+    modal.style.display = 'flex';
+    showKnowledgeBaseCategory('overview');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeKnowledgeBase() {
+    const modal = document.getElementById('knowledgeBaseModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = ''; // Restore scrolling
+}
+
+function handleKnowledgeBaseNav(e) {
+    // Remove active class from all buttons
+    document.querySelectorAll('.kb-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    e.target.classList.add('active');
+    
+    // Show content for selected category
+    const category = e.target.dataset.category;
+    showKnowledgeBaseCategory(category);
+}
+
+function showKnowledgeBaseCategory(category) {
+    // Hide all sections
+    document.querySelectorAll('.kb-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show selected section
+    const selectedSection = document.querySelector(`.kb-section[data-category="${category}"]`);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
 }

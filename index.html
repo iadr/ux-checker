@@ -9,7 +9,7 @@
 <body>
     <header>
         <h1>UX Accessibility Checker</h1>
-        <p>Analyze UI/UX interfaces for visual accessibility</p>
+        <p>Analyze any interface for visual accessibility — Web, Dashboards, Games, Custom Displays</p>
     </header>
 
     <main class="container">
@@ -94,6 +94,7 @@
             <section class="control-group">
                 <button id="analyzeButton" class="btn-primary">Analyze Image</button>
                 <button id="resetButton" class="btn-secondary">Reset</button>
+                <button id="knowledgeBaseButton" class="btn-info">📚 Knowledge Base</button>
             </section>
         </aside>
 
@@ -104,7 +105,8 @@
                     <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/>
                     </svg>
-                    <p>Drop image here or click to upload</p>
+                    <p>Drop screenshot of any interface here or click to upload</p>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">Web apps • Dashboards • Games • Custom displays</p>
                 </div>
                 <div id="imagePreview" class="image-preview" style="display: none;">
                     <canvas id="previewCanvas"></canvas>
@@ -171,6 +173,539 @@
             </div>
         </section>
     </main>
+
+    <!-- Knowledge Base Modal -->
+    <div id="knowledgeBaseModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 Accessibility Knowledge Base</h2>
+                <button id="closeModalButton" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="kb-navigation">
+                    <button class="kb-nav-btn active" data-category="overview">Overview</button>
+                    <button class="kb-nav-btn" data-category="colorblind">Color Blindness</button>
+                    <button class="kb-nav-btn" data-category="contrast">Contrast</button>
+                    <button class="kb-nav-btn" data-category="vision">Vision</button>
+                    <button class="kb-nav-btn" data-category="seizure">Seizure Safety</button>
+                    <button class="kb-nav-btn" data-category="recommendations">Best Practices</button>
+                </div>
+                <div class="kb-content" id="kbContent">
+                    <!-- Overview -->
+                    <div class="kb-section" data-category="overview">
+                        <h3>Understanding Visual Accessibility</h3>
+                        <p>Visual accessibility ensures that digital content and interfaces are perceivable and usable by people with various visual impairments. Approximately <strong>2.2 billion people</strong> globally have vision impairment, and millions more experience temporary or situational vision challenges.</p>
+                        
+                        <div class="kb-card">
+                            <h4>What Can You Test?</h4>
+                            <p>This tool analyzes screenshots of any visual interface:</p>
+                            <ul>
+                                <li><strong>Web Applications:</strong> Websites, web apps, SaaS platforms</li>
+                                <li><strong>Dashboards:</strong> Analytics dashboards, control panels, admin interfaces</li>
+                                <li><strong>Game Interfaces:</strong> HUDs, menus, UI elements in games</li>
+                                <li><strong>Custom Displays:</strong> Digital signage, kiosks, embedded systems</li>
+                                <li><strong>Mobile Apps:</strong> iOS and Android app screenshots</li>
+                                <li><strong>Desktop Software:</strong> Application interfaces and tools</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>Why This Matters</h4>
+                            <p>Designing for accessibility isn't just the right thing to do—it's also:</p>
+                            <ul>
+                                <li><strong>Legal requirement:</strong> Many countries mandate WCAG 2.1 Level AA compliance for digital products</li>
+                                <li><strong>Business benefit:</strong> Increases your potential user base by 15-20%</li>
+                                <li><strong>Better UX:</strong> Accessible design improves usability for everyone</li>
+                                <li><strong>Competitive advantage:</strong> Accessible games and apps reach wider audiences</li>
+                                <li><strong>User retention:</strong> Players and users stay longer when they can actually see and use your interface</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Types of Visual Disabilities</h4>
+                        <div class="kb-grid">
+                            <div class="kb-grid-item">
+                                <strong>Color Blindness</strong>
+                                <p>~8% of males and ~0.5% of females have some form of color vision deficiency</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Low Vision</strong>
+                                <p>Includes partial sight, low visual acuity, and field loss</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Light Sensitivity</strong>
+                                <p>~3% of epilepsy patients are photosensitive</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Age-Related</strong>
+                                <p>Vision naturally declines with age, affecting contrast and clarity</p>
+                            </div>
+                        </div>
+                        
+                        <div class="kb-tip">
+                            <strong>💡 Pro Tip:</strong> Design with accessibility in mind from the start—it's much easier than retrofitting later!
+                        </div>
+                    </div>
+
+                    <!-- Color Blindness -->
+                    <div class="kb-section" data-category="colorblind" style="display: none;">
+                        <h3>Color Vision Deficiency (Color Blindness)</h3>
+                        <p>Color blindness is a genetic condition that affects how people perceive colors. It's caused by the absence or malfunction of certain cone cells in the retina.</p>
+                        
+                        <div class="kb-card">
+                            <h4>🔴 Protanopia (Red-Blind)</h4>
+                            <p><span class="kb-stat">~1% of males</span></p>
+                            <p><strong>What it is:</strong> Absence of red cone photoreceptors. Red appears dark gray or black, and red-orange-yellow colors are shifted toward green.</p>
+                            <p><strong>Common issues:</strong></p>
+                            <ul>
+                                <li>Red error messages disappear or look dark</li>
+                                <li>Red buttons blend with brown/green backgrounds</li>
+                                <li>Red vs. green status indicators are indistinguishable</li>
+                                <li>Heat maps using red-green scales are unreadable</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>🟢 Deuteranopia (Green-Blind)</h4>
+                            <p><span class="kb-stat">~1% of males</span> (Most common type)</p>
+                            <p><strong>What it is:</strong> Absence of green cone photoreceptors. Green appears beige/yellow, and greens are confused with reds.</p>
+                            <p><strong>Common issues:</strong></p>
+                            <ul>
+                                <li>Traffic light style indicators are problematic</li>
+                                <li>Green "success" states look similar to red "errors"</li>
+                                <li>Charts using red-green differentiation fail</li>
+                                <li>Syntax highlighting in code editors is confusing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>🔵 Tritanopia (Blue-Blind)</h4>
+                            <p><span class="kb-stat">~0.001%</span> (Very rare)</p>
+                            <p><strong>What it is:</strong> Absence of blue cone photoreceptors. Blue appears green, and yellow looks violet or light gray.</p>
+                            <p><strong>Common issues:</strong></p>
+                            <ul>
+                                <li>Blue buttons blend with green elements</li>
+                                <li>Blue-yellow charts are problematic</li>
+                                <li>Sky/water imagery loses contrast</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>⚫ Achromatopsia (Total Color Blindness)</h4>
+                            <p><span class="kb-stat">~0.003%</span> (Extremely rare)</p>
+                            <p><strong>What it is:</strong> Complete absence of color vision—the world appears in grayscale.</p>
+                            <p><strong>Key consideration:</strong> Design must work perfectly in grayscale. All color-based information must have non-color alternatives.</p>
+                        </div>
+                        
+                        <h4>How to Fix Color Blindness Issues</h4>
+                        <div class="kb-example">
+                            <strong>✓ DO:</strong>
+                            <ul>
+                                <li>Use patterns, icons, and text labels in addition to color</li>
+                                <li>Ensure sufficient contrast (4.5:1 minimum)</li>
+                                <li>Use blue-orange or purple-yellow color schemes (safe for all types)</li>
+                                <li>Add texture/pattern fills to charts and graphs</li>
+                                <li>Test designs in grayscale mode</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-warning">
+                            <strong>✗ DON'T:</strong>
+                            <ul>
+                                <li>Never use color as the ONLY way to convey information</li>
+                                <li>Avoid red-green, brown-green, or light green-yellow combinations</li>
+                                <li>Don't rely on subtle color differences</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contrast -->
+                    <div class="kb-section" data-category="contrast" style="display: none;">
+                        <h3>Contrast Requirements (WCAG Standards)</h3>
+                        <p>Contrast ratio is the difference in luminance between foreground and background. Low contrast makes text difficult or impossible to read, especially for users with low vision or color blindness.</p>
+                        
+                        <div class="kb-card">
+                            <h4>WCAG AA (Minimum Standard) ⭐</h4>
+                            <p><strong>Normal Text (&lt; 18pt / &lt; 14pt bold):</strong> <span class="kb-stat">4.5:1</span></p>
+                            <p><strong>Large Text (≥ 18pt / ≥ 14pt bold):</strong> <span class="kb-stat">3:1</span></p>
+                            <p><strong>UI Components & Graphics:</strong> <span class="kb-stat">3:1</span></p>
+                            <p>This is the legal requirement in many jurisdictions and should be your minimum baseline.</p>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>WCAG AAA (Enhanced Standard) ⭐⭐⭐</h4>
+                            <p><strong>Normal Text:</strong> <span class="kb-stat">7:1</span></p>
+                            <p><strong>Large Text:</strong> <span class="kb-stat">4.5:1</span></p>
+                            <p>Recommended for critical applications, financial services, healthcare, and government sites.</p>
+                        </div>
+                        
+                        <h4>Understanding Contrast Ratios</h4>
+                        <div class="kb-grid">
+                            <div class="kb-grid-item">
+                                <strong>21:1</strong>
+                                <p>Maximum (Black on White)</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>7:1</strong>
+                                <p>AAA Normal Text</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>4.5:1</strong>
+                                <p>AA Normal Text (Minimum)</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>3:1</strong>
+                                <p>Large Text & UI Elements</p>
+                            </div>
+                        </div>
+                        
+                        <h4>How Contrast is Calculated</h4>
+                        <div class="kb-example">
+                            <p><strong>Formula:</strong> (L1 + 0.05) / (L2 + 0.05)</p>
+                            <p>Where L1 is the relative luminance of the lighter color and L2 is the darker color.</p>
+                            <p><strong>Relative Luminance:</strong> Calculated using gamma-corrected RGB values:</p>
+                            <p>L = 0.2126 × R + 0.7152 × G + 0.0722 × B</p>
+                        </div>
+                        
+                        <h4>Common Contrast Failures</h4>
+                        <div class="kb-warning">
+                            <ul>
+                                <li><strong>Gray text on white backgrounds:</strong> Light gray (#767676 or lighter) often fails</li>
+                                <li><strong>Placeholder text:</strong> Often too light to read</li>
+                                <li><strong>Disabled buttons:</strong> Still need 3:1 for non-text</li>
+                                <li><strong>Link text:</strong> Must have 4.5:1 against background</li>
+                                <li><strong>Text over images:</strong> Requires overlays or shadows for sufficient contrast</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>How to Improve Contrast</h4>
+                        <div class="kb-tip">
+                            <strong>Quick Fixes:</strong>
+                            <ul>
+                                <li><strong>Darken text:</strong> Change #999999 to #595959 or darker</li>
+                                <li><strong>Add borders:</strong> 1px dark border helps define edges</li>
+                                <li><strong>Use shadows:</strong> Text shadow: 0 1px 2px rgba(0,0,0,0.8)</li>
+                                <li><strong>Add overlays:</strong> Semi-transparent dark layer behind text on images</li>
+                                <li><strong>Increase font weight:</strong> Bold text is more readable at lower contrast</li>
+                                <li><strong>Increase font size:</strong> Larger text has more relaxed contrast requirements</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-example">
+                            <strong>Testing Tools:</strong>
+                            <ul>
+                                <li><strong>Chrome DevTools:</strong> Built-in contrast ratio checker in color picker</li>
+                                <li><strong>WebAIM Contrast Checker:</strong> Free online tool</li>
+                                <li><strong>Colour Contrast Analyser:</strong> Desktop app for Windows/Mac</li>
+                                <li><strong>Our tool:</strong> Automated contrast analysis across entire images</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Vision -->
+                    <div class="kb-section" data-category="vision" style="display: none;">
+                        <h3>Low Vision & Visual Impairment</h3>
+                        <p>Low vision refers to visual impairment that cannot be fully corrected with glasses, contact lenses, medication, or surgery. It affects <strong>over 246 million people</strong> globally.</p>
+                        
+                        <div class="kb-card">
+                            <h4>Types of Low Vision</h4>
+                            <ul>
+                                <li><strong>Reduced Visual Acuity:</strong> Blurry vision, inability to see fine details</li>
+                                <li><strong>Loss of Central Vision:</strong> Center of field of view has blind spot (macular degeneration)</li>
+                                <li><strong>Loss of Peripheral Vision:</strong> "Tunnel vision" (glaucoma, retinitis pigmentosa)</li>
+                                <li><strong>Night Blindness:</strong> Difficulty seeing in low light</li>
+                                <li><strong>Clouded Vision:</strong> Cataracts causing cloudy or dim vision</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>How Low Vision Affects Web Use</h4>
+                        <div class="kb-warning">
+                            <p><strong>Challenges:</strong></p>
+                            <ul>
+                                <li>Small text is illegible even with magnification</li>
+                                <li>Fine details and thin lines disappear</li>
+                                <li>Complex layouts become confusing when zoomed</li>
+                                <li>Low contrast is dramatically more problematic</li>
+                                <li>Multiple fonts and styles create visual noise</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Design Recommendations</h4>
+                        <div class="kb-tip">
+                            <strong>Typography:</strong>
+                            <ul>
+                                <li><strong>Minimum 16px base font size</strong> (browsers default to 16px)</li>
+                                <li><strong>Allow text resize up to 200%</strong> without breaking layout</li>
+                                <li><strong>Use clear sans-serif fonts</strong> for body text</li>
+                                <li><strong>1.5× line height minimum</strong> for better readability</li>
+                                <li><strong>Use sufficient letter spacing</strong> (not condensed fonts)</li>
+                                <li><strong>Avoid ALL CAPS for body text</strong></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-tip">
+                            <strong>Layout & Design:</strong>
+                            <ul>
+                                <li><strong>Generous white space</strong> between elements</li>
+                                <li><strong>Clear visual hierarchy</strong> with size and weight</li>
+                                <li><strong>Avoid justified text</strong> (use left-aligned)</li>
+                                <li><strong>Keep line length 50-75 characters</strong></li>
+                                <li><strong>Large, clear interactive targets</strong> (min 44×44px)</li>
+                                <li><strong>Responsive design</strong> that works with zoom</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-example">
+                            <strong>Testing Your Design:</strong>
+                            <ul>
+                                <li>Zoom browser to 200% and verify usability</li>
+                                <li>Apply blur filter (CSS: filter: blur(2px)) to simulate reduced acuity</li>
+                                <li>Test with Windows Magnifier or macOS Zoom</li>
+                                <li>Try navigating with only keyboard</li>
+                                <li>Use our Low Vision Simulation to preview your design</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Common Mistakes</h4>
+                        <div class="kb-warning">
+                            <ul>
+                                <li><strong>Fixed font sizes (px):</strong> Prevents user zoom—use rem/em instead</li>
+                                <li><strong>Horizontal scrolling:</strong> Breaks when content is zoomed</li>
+                                <li><strong>Tiny touch targets:</strong> Impossible to tap accurately</li>
+                                <li><strong>Critical info in fine print:</strong> May be completely invisible</li>
+                                <li><strong>Decorative fonts for UI text:</strong> Sacrifices legibility for style</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Seizure Safety -->
+                    <div class="kb-section" data-category="seizure" style="display: none;">
+                        <h3>Photosensitive Epilepsy & Seizure Safety</h3>
+                        <p>Photosensitive epilepsy affects approximately <strong>3% of people with epilepsy</strong>, or about 1 in 4,000 people. Certain visual stimuli can trigger seizures, which can be dangerous or fatal.</p>
+                        
+                        <div class="kb-warning">
+                            <h4>⚠️ Critical Safety Rules</h4>
+                            <p><strong>This is a safety issue, not just accessibility:</strong> Violating these guidelines can cause serious harm.</p>
+                            <ul>
+                                <li><strong>NO flashing at 3-55 Hz</strong> (3-55 times per second)</li>
+                                <li><strong>Especially dangerous: 15-25 Hz (red flashing at 15-25 Hz is most dangerous)</strong></li>
+                                <li><strong>Large flash area:</strong> Larger than 25% of 10° visual field (~341×256 pixels at typical viewing distance)</li>
+                                <li><strong>High contrast flashing:</strong> Alternating between very bright and very dark</li>
+                                <li><strong>Red flashing:</strong> Saturated red is particularly problematic</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>WCAG Guidelines (Success Criterion 2.3.1)</h4>
+                            <p><strong>General Flash Threshold:</strong> Web pages do not contain anything that flashes more than 3 times in any 1-second period.</p>
+                            <p><strong>Exceptions:</strong> The flash must be:</p>
+                            <ul>
+                                <li>Below the general flash threshold, OR</li>
+                                <li>Below the red flash threshold</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>What Triggers Photosensitive Seizures?</h4>
+                        <div class="kb-grid">
+                            <div class="kb-grid-item">
+                                <strong>Flashing/Strobing</strong>
+                                <p>Rapid alternating light patterns</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>High Contrast</strong>
+                                <p>Bright white/black transitions</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Saturated Red</strong>
+                                <p>Bright red flashing is most dangerous</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Patterns</strong>
+                                <p>High contrast striped or checked patterns</p>
+                            </div>
+                        </div>
+                        
+                        <h4>Safe Animation Practices</h4>
+                        <div class="kb-tip">
+                            <strong>✓ SAFE:</strong>
+                            <ul>
+                                <li><strong>Gentle fades:</strong> Smooth transitions over 0.5+ seconds</li>
+                                <li><strong>Slow movements:</strong> Smooth scrolling and panning</li>
+                                <li><strong>Low frequency:</strong> If something must flash, keep it under 3 Hz</li>
+                                <li><strong>Small area:</strong> Keep flashing elements small</li>
+                                <li><strong>Reduced motion respect:</strong> Honor prefers-reduced-motion</li>
+                                <li><strong>Play/pause controls:</strong> Let users control animations</li>
+                                <li><strong>Auto-play disable:</strong> Don't auto-play videos with flashing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-warning">
+                            <strong>✗ DANGEROUS:</strong>
+                            <ul>
+                                <li>Rapid flashing notifications or alerts</li>
+                                <li>Strobe effects in backgrounds or transitions</li>
+                                <li>Rapid color cycling (rainbow effects)</li>
+                                <li>High-contrast blinking cursors or indicators</li>
+                                <li>Parallax effects with high-contrast patterns</li>
+                                <li>Auto-playing videos with flashing content</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Testing for Seizure Safety</h4>
+                        <div class="kb-example">
+                            <strong>Automated Tools:</strong>
+                            <ul>
+                                <li><strong>PEAT (Photosensitive Epilepsy Analysis Tool):</strong> Free tool from Trace Center</li>
+                                <li><strong>Harding Test:</strong> Professional analysis service</li>
+                                <li><strong>Our tool:</strong> Analyzes static images for high-risk patterns</li>
+                            </ul>
+                            
+                            <p><strong>Manual Testing:</strong></p>
+                            <ul>
+                                <li>Count flashes per second (must be under 3)</li>
+                                <li>Check contrast ratios in animations</li>
+                                <li>Measure flash area on screen</li>
+                                <li>Test with slow-motion video recording</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Prefers-Reduced-Motion</h4>
+                        <div class="kb-example">
+                            <strong>CSS Media Query:</strong>
+                            <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto;">@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}</pre>
+                            <p>This respects user preferences for reduced motion, which may include photosensitive individuals.</p>
+                        </div>
+                        
+                        <div class="kb-warning">
+                            <strong>⚠️ Legal Note:</strong> Causing seizures through web content can result in legal liability. Several lawsuits have been filed for photosensitive seizure triggers online. Take this seriously.
+                        </div>
+                    </div>
+
+                    <!-- Best Practices -->
+                    <div class="kb-section" data-category="recommendations" style="display: none;">
+                        <h3>Best Practices & Recommendations</h3>
+                        <p>A comprehensive guide to improving accessibility across all visual disability types.</p>
+                        
+                        <div class="kb-card">
+                            <h4>🎨 Color & Contrast</h4>
+                            <ul>
+                                <li><strong>Never use color alone:</strong> Always pair with icons, text, or patterns</li>
+                                <li><strong>Meet WCAG AA minimum:</strong> 4.5:1 for normal text, 3:1 for large text and UI</li>
+                                <li><strong>Test in grayscale:</strong> Design should work without color</li>
+                                <li><strong>Use colorblind-safe palettes:</strong> Blue-orange, purple-yellow schemes</li>
+                                <li><strong>Avoid red-green combinations:</strong> Most problematic for color blind users</li>
+                                <li><strong>High contrast mode support:</strong> Test in Windows High Contrast Mode</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>📝 Typography</h4>
+                            <ul>
+                                <li><strong>Base font size 16px minimum:</strong> Consider 18px for better readability</li>
+                                <li><strong>Use relative units (rem/em):</strong> Allow user zoom without breaking</li>
+                                <li><strong>1.5× line height minimum:</strong> 1.6-1.8 is ideal for body text</li>
+                                <li><strong>50-75 character line length:</strong> Prevents eye strain</li>
+                                <li><strong>Sans-serif for UI/body:</strong> More legible at small sizes</li>
+                                <li><strong>Sufficient letter spacing:</strong> Don't use condensed fonts</li>
+                                <li><strong>Left-align text:</strong> Easier to follow than justified</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>🖱️ Interactive Elements</h4>
+                            <ul>
+                                <li><strong>44×44px minimum touch targets:</strong> 48×48px is better</li>
+                                <li><strong>Clear focus indicators:</strong> Visible keyboard navigation</li>
+                                <li><strong>Sufficient spacing:</strong> 8px minimum between clickable items</li>
+                                <li><strong>Descriptive labels:</strong> "Submit Form" not just "Submit"</li>
+                                <li><strong>Error messages near inputs:</strong> Don't rely on color alone</li>
+                                <li><strong>Hover tooltips need alternatives:</strong> Touch users can't hover</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>🎬 Motion & Animation</h4>
+                            <ul>
+                                <li><strong>No flashing over 3 Hz:</strong> Safety requirement</li>
+                                <li><strong>Respect prefers-reduced-motion:</strong> Disable or simplify animations</li>
+                                <li><strong>Provide play/pause controls:</strong> For carousels and auto-play</li>
+                                <li><strong>No auto-play with sound:</strong> Unless muted by default</li>
+                                <li><strong>Smooth, slow transitions:</strong> 0.3-0.5s minimum duration</li>
+                                <li><strong>Avoid parallax on critical content:</strong> Can cause disorientation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="kb-card">
+                            <h4>🏗️ Layout & Structure</h4>
+                            <ul>
+                                <li><strong>Generous white space:</strong> Reduces cognitive load</li>
+                                <li><strong>Clear visual hierarchy:</strong> Use size, weight, and spacing</li>
+                                <li><strong>Responsive up to 200% zoom:</strong> No horizontal scrolling</li>
+                                <li><strong>Semantic HTML:</strong> Proper heading levels, landmarks</li>
+                                <li><strong>Skip links:</strong> Allow keyboard users to skip navigation</li>
+                                <li><strong>Consistent navigation:</strong> Same location on every page</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Testing Workflow</h4>
+                        <div class="kb-example">
+                            <strong>Step-by-Step Testing:</strong>
+                            <ol>
+                                <li><strong>Automated scan:</strong> Use our tool or Lighthouse for quick baseline</li>
+                                <li><strong>Contrast check:</strong> Verify all text meets 4.5:1 (or 3:1 for large)</li>
+                                <li><strong>Grayscale test:</strong> Turn off colors in browser or use filter</li>
+                                <li><strong>Zoom to 200%:</strong> Ensure layout doesn't break</li>
+                                <li><strong>Keyboard navigation:</strong> Tab through entire page, verify focus</li>
+                                <li><strong>Screen reader test:</strong> Use NVDA (Windows) or VoiceOver (Mac)</li>
+                                <li><strong>Color blind simulation:</strong> Use our tool or browser extensions</li>
+                                <li><strong>Reduced motion test:</strong> Enable in OS and verify animations</li>
+                            </ol>
+                        </div>
+                        
+                        <h4>Quick Wins - Easy Fixes</h4>
+                        <div class="kb-tip">
+                            <strong>Implement these today:</strong>
+                            <ul>
+                                <li>✓ Add alt text to all images</li>
+                                <li>✓ Increase body text to 16px minimum</li>
+                                <li>✓ Add focus outlines to interactive elements</li>
+                                <li>✓ Add icons to color-coded status indicators</li>
+                                <li>✓ Increase contrast on gray text</li>
+                                <li>✓ Add aria-labels to icon-only buttons</li>
+                                <li>✓ Make clickable areas larger (44px minimum)</li>
+                                <li>✓ Add skip navigation link</li>
+                            </ul>
+                        </div>
+                        
+                        <h4>Resources & Tools</h4>
+                        <div class="kb-grid">
+                            <div class="kb-grid-item">
+                                <strong>WCAG Guidelines</strong>
+                                <p>Official W3C Web Content Accessibility Guidelines</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>WebAIM</strong>
+                                <p>Articles, training, and testing tools</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>A11Y Project</strong>
+                                <p>Community-driven accessibility patterns</p>
+                            </div>
+                            <div class="kb-grid-item">
+                                <strong>Deque axe Tools</strong>
+                                <p>Browser extensions for automated testing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
