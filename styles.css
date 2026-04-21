@@ -31,6 +31,36 @@ body {
     line-height: 1.6;
 }
 
+/* Bootstrap Icons Styling */
+.bi {
+    vertical-align: -0.125em;
+    margin-right: 0.25rem;
+}
+
+.kb-card h4 .bi,
+.modal-header h2 .bi {
+    margin-right: 0.5rem;
+}
+
+.kb-tip .bi,
+.kb-warning .bi,
+.kb-example .bi {
+    margin-right: 0.35rem;
+}
+
+.kb-tip li .bi {
+    color: var(--success);
+    margin-right: 0.5rem;
+}
+
+.kb-warning .bi-exclamation-triangle-fill {
+    color: var(--warning);
+}
+
+.kb-warning .bi-x-lg {
+    color: var(--error);
+}
+
 /* Header */
 header {
     background: var(--surface);

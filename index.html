@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UX Checker - Accessibility Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -94,7 +95,7 @@
             <section class="control-group">
                 <button id="analyzeButton" class="btn-primary">Analyze Image</button>
                 <button id="resetButton" class="btn-secondary">Reset</button>
-                <button id="knowledgeBaseButton" class="btn-info">📚 Knowledge Base</button>
+                <button id="knowledgeBaseButton" class="btn-info"><i class="bi bi-book"></i> Knowledge Base</button>
             </section>
         </aside>
 
@@ -178,7 +179,7 @@
     <div id="knowledgeBaseModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📚 Accessibility Knowledge Base</h2>
+                <h2><i class="bi bi-book"></i> Accessibility Knowledge Base</h2>
                 <button id="closeModalButton" class="close-button">&times;</button>
             </div>
             <div class="modal-body">
@@ -242,7 +243,7 @@
                         </div>
                         
                         <div class="kb-tip">
-                            <strong>💡 Pro Tip:</strong> Design with accessibility in mind from the start—it's much easier than retrofitting later!
+                            <strong><i class="bi bi-lightbulb"></i> Pro Tip:</strong> Design with accessibility in mind from the start—it's much easier than retrofitting later!
                         </div>
                     </div>
 
@@ -252,7 +253,7 @@
                         <p>Color blindness is a genetic condition that affects how people perceive colors. It's caused by the absence or malfunction of certain cone cells in the retina.</p>
                         
                         <div class="kb-card">
-                            <h4>🔴 Protanopia (Red-Blind)</h4>
+                            <h4><i class="bi bi-circle-fill" style="color: #dc3545;"></i> Protanopia (Red-Blind)</h4>
                             <p><span class="kb-stat">~1% of males</span></p>
                             <p><strong>What it is:</strong> Absence of red cone photoreceptors. Red appears dark gray or black, and red-orange-yellow colors are shifted toward green.</p>
                             <p><strong>Common issues:</strong></p>
@@ -265,7 +266,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>🟢 Deuteranopia (Green-Blind)</h4>
+                            <h4><i class="bi bi-circle-fill" style="color: #28a745;"></i> Deuteranopia (Green-Blind)</h4>
                             <p><span class="kb-stat">~1% of males</span> (Most common type)</p>
                             <p><strong>What it is:</strong> Absence of green cone photoreceptors. Green appears beige/yellow, and greens are confused with reds.</p>
                             <p><strong>Common issues:</strong></p>
@@ -278,7 +279,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>🔵 Tritanopia (Blue-Blind)</h4>
+                            <h4><i class="bi bi-circle-fill" style="color: #007bff;"></i> Tritanopia (Blue-Blind)</h4>
                             <p><span class="kb-stat">~0.001%</span> (Very rare)</p>
                             <p><strong>What it is:</strong> Absence of blue cone photoreceptors. Blue appears green, and yellow looks violet or light gray.</p>
                             <p><strong>Common issues:</strong></p>
@@ -290,7 +291,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>⚫ Achromatopsia (Total Color Blindness)</h4>
+                            <h4><i class="bi bi-circle-fill" style="color: #000000;"></i> Achromatopsia (Total Color Blindness)</h4>
                             <p><span class="kb-stat">~0.003%</span> (Extremely rare)</p>
                             <p><strong>What it is:</strong> Complete absence of color vision—the world appears in grayscale.</p>
                             <p><strong>Key consideration:</strong> Design must work perfectly in grayscale. All color-based information must have non-color alternatives.</p>
@@ -298,7 +299,7 @@
                         
                         <h4>How to Fix Color Blindness Issues</h4>
                         <div class="kb-example">
-                            <strong>✓ DO:</strong>
+                            <strong><i class="bi bi-check-lg"></i> DO:</strong>
                             <ul>
                                 <li>Use patterns, icons, and text labels in addition to color</li>
                                 <li>Ensure sufficient contrast (4.5:1 minimum)</li>
@@ -309,7 +310,7 @@
                         </div>
                         
                         <div class="kb-warning">
-                            <strong>✗ DON'T:</strong>
+                            <strong><i class="bi bi-x-lg"></i> DON'T:</strong>
                             <ul>
                                 <li>Never use color as the ONLY way to convey information</li>
                                 <li>Avoid red-green, brown-green, or light green-yellow combinations</li>
@@ -324,7 +325,7 @@
                         <p>Contrast ratio is the difference in luminance between foreground and background. Low contrast makes text difficult or impossible to read, especially for users with low vision or color blindness.</p>
                         
                         <div class="kb-card">
-                            <h4>WCAG AA (Minimum Standard) ⭐</h4>
+                            <h4>WCAG AA (Minimum Standard) <i class="bi bi-star-fill" style="color: #ffc107;"></i></h4>
                             <p><strong>Normal Text (&lt; 18pt / &lt; 14pt bold):</strong> <span class="kb-stat">4.5:1</span></p>
                             <p><strong>Large Text (≥ 18pt / ≥ 14pt bold):</strong> <span class="kb-stat">3:1</span></p>
                             <p><strong>UI Components & Graphics:</strong> <span class="kb-stat">3:1</span></p>
@@ -332,7 +333,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>WCAG AAA (Enhanced Standard) ⭐⭐⭐</h4>
+                            <h4>WCAG AAA (Enhanced Standard) <i class="bi bi-star-fill" style="color: #ffc107;"></i><i class="bi bi-star-fill" style="color: #ffc107;"></i><i class="bi bi-star-fill" style="color: #ffc107;"></i></h4>
                             <p><strong>Normal Text:</strong> <span class="kb-stat">7:1</span></p>
                             <p><strong>Large Text:</strong> <span class="kb-stat">4.5:1</span></p>
                             <p>Recommended for critical applications, financial services, healthcare, and government sites.</p>
@@ -483,7 +484,7 @@
                         <p>Photosensitive epilepsy affects approximately <strong>3% of people with epilepsy</strong>, or about 1 in 4,000 people. Certain visual stimuli can trigger seizures, which can be dangerous or fatal.</p>
                         
                         <div class="kb-warning">
-                            <h4>⚠️ Critical Safety Rules</h4>
+                            <h4><i class="bi bi-exclamation-triangle-fill"></i> Critical Safety Rules</h4>
                             <p><strong>This is a safety issue, not just accessibility:</strong> Violating these guidelines can cause serious harm.</p>
                             <ul>
                                 <li><strong>NO flashing at 3-55 Hz</strong> (3-55 times per second)</li>
@@ -526,7 +527,7 @@
                         
                         <h4>Safe Animation Practices</h4>
                         <div class="kb-tip">
-                            <strong>✓ SAFE:</strong>
+                            <strong><i class="bi bi-check-lg"></i> SAFE:</strong>
                             <ul>
                                 <li><strong>Gentle fades:</strong> Smooth transitions over 0.5+ seconds</li>
                                 <li><strong>Slow movements:</strong> Smooth scrolling and panning</li>
@@ -539,7 +540,7 @@
                         </div>
                         
                         <div class="kb-warning">
-                            <strong>✗ DANGEROUS:</strong>
+                            <strong><i class="bi bi-x-lg"></i> DANGEROUS:</strong>
                             <ul>
                                 <li>Rapid flashing notifications or alerts</li>
                                 <li>Strobe effects in backgrounds or transitions</li>
@@ -582,7 +583,7 @@
                         </div>
                         
                         <div class="kb-warning">
-                            <strong>⚠️ Legal Note:</strong> Causing seizures through web content can result in legal liability. Several lawsuits have been filed for photosensitive seizure triggers online. Take this seriously.
+                            <strong><i class="bi bi-exclamation-triangle-fill"></i> Legal Note:</strong> Causing seizures through web content can result in legal liability. Several lawsuits have been filed for photosensitive seizure triggers online. Take this seriously.
                         </div>
                     </div>
 
@@ -592,7 +593,7 @@
                         <p>A comprehensive guide to improving accessibility across all visual disability types.</p>
                         
                         <div class="kb-card">
-                            <h4>🎨 Color & Contrast</h4>
+                            <h4><i class="bi bi-palette"></i> Color & Contrast</h4>
                             <ul>
                                 <li><strong>Never use color alone:</strong> Always pair with icons, text, or patterns</li>
                                 <li><strong>Meet WCAG AA minimum:</strong> 4.5:1 for normal text, 3:1 for large text and UI</li>
@@ -604,7 +605,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>📝 Typography</h4>
+                            <h4><i class="bi bi-pencil-square"></i> Typography</h4>
                             <ul>
                                 <li><strong>Base font size 16px minimum:</strong> Consider 18px for better readability</li>
                                 <li><strong>Use relative units (rem/em):</strong> Allow user zoom without breaking</li>
@@ -617,7 +618,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>🖱️ Interactive Elements</h4>
+                            <h4><i class="bi bi-mouse"></i> Interactive Elements</h4>
                             <ul>
                                 <li><strong>44×44px minimum touch targets:</strong> 48×48px is better</li>
                                 <li><strong>Clear focus indicators:</strong> Visible keyboard navigation</li>
@@ -629,7 +630,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>🎬 Motion & Animation</h4>
+                            <h4><i class="bi bi-camera-video"></i> Motion & Animation</h4>
                             <ul>
                                 <li><strong>No flashing over 3 Hz:</strong> Safety requirement</li>
                                 <li><strong>Respect prefers-reduced-motion:</strong> Disable or simplify animations</li>
@@ -641,7 +642,7 @@
                         </div>
                         
                         <div class="kb-card">
-                            <h4>🏗️ Layout & Structure</h4>
+                            <h4><i class="bi bi-building"></i> Layout & Structure</h4>
                             <ul>
                                 <li><strong>Generous white space:</strong> Reduces cognitive load</li>
                                 <li><strong>Clear visual hierarchy:</strong> Use size, weight, and spacing</li>
@@ -671,14 +672,14 @@
                         <div class="kb-tip">
                             <strong>Implement these today:</strong>
                             <ul>
-                                <li>✓ Add alt text to all images</li>
-                                <li>✓ Increase body text to 16px minimum</li>
-                                <li>✓ Add focus outlines to interactive elements</li>
-                                <li>✓ Add icons to color-coded status indicators</li>
-                                <li>✓ Increase contrast on gray text</li>
-                                <li>✓ Add aria-labels to icon-only buttons</li>
-                                <li>✓ Make clickable areas larger (44px minimum)</li>
-                                <li>✓ Add skip navigation link</li>
+                                <li><i class="bi bi-check-lg"></i> Add alt text to all images</li>
+                                <li><i class="bi bi-check-lg"></i> Increase body text to 16px minimum</li>
+                                <li><i class="bi bi-check-lg"></i> Add focus outlines to interactive elements</li>
+                                <li><i class="bi bi-check-lg"></i> Add icons to color-coded status indicators</li>
+                                <li><i class="bi bi-check-lg"></i> Increase contrast on gray text</li>
+                                <li><i class="bi bi-check-lg"></i> Add aria-labels to icon-only buttons</li>
+                                <li><i class="bi bi-check-lg"></i> Make clickable areas larger (44px minimum)</li>
+                                <li><i class="bi bi-check-lg"></i> Add skip navigation link</li>
                             </ul>
                         </div>
                         
