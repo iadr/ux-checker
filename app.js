@@ -609,36 +609,134 @@ function analyzeImageForDisability(disability) {
     return issues;
 }
 
-function analyzeColorContrast(data, type) {
-    const issues = [];
+// WCAG Contrast Calculation Functions
+function sRGBtoLinear(colorChannel) {
+    // Convert 8-bit color value to 0-1 range
+    const c = colorChannel / 255;
     
-    // Sample pixels to check for low contrast areas
-    let lowContrastAreas = 0;
-    const sampleSize = 100;
+    // Apply sRGB gamma correction
+    if (c <= 0.03928) {
+        return c / 12.92;
+    } else {
+        return Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+}
+
+function getRelativeLuminance(r, g, b) {
+    // Convert RGB to relative luminance using WCAG formula
+    const rLinear = sRGBtoLinear(r);
+    const gLinear = sRGBtoLinear(g);
+    const bLinear = sRGBtoLinear(b);
     
+    return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+}
+
+function getContrastRatio(lum1, lum2) {
+    // Calculate WCAG contrast ratio
+    const lighter = Math.max(lum1, lum2);
+    const darker = Math.min(lum1, lum2);
+    
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+function analyzeWCAGContrast(data) {
+    // Comprehensive WCAG contrast analysis
+    const results = {
+        AA_normal: { pass: 0, fail: 0, threshold: 4.5 },
+        AA_large: { pass: 0, fail: 0, threshold: 3.0 },
+        AAA_normal: { pass: 0, fail: 0, threshold: 7.0 },
+        AAA_large: { pass: 0, fail: 0, threshold: 4.5 },
+        nonText: { pass: 0, fail: 0, threshold: 3.0 },
+        ratios: []
+    };
+    
+    const sampleSize = 50;
+    const neighborDistance = 20; // pixels to check against
+    
+    // Sample pixels across the image
     for (let i = 0; i < data.length; i += sampleSize * 4) {
-        if (i + 4 >= data.length) break;
+        if (i + neighborDistance * 4 >= data.length) break;
         
         const r1 = data[i];
         const g1 = data[i + 1];
         const b1 = data[i + 2];
         
-        const nextIndex = Math.min(i + 400, data.length - 4);
+        // Check against neighboring pixel
+        const nextIndex = i + neighborDistance * 4;
         const r2 = data[nextIndex];
         const g2 = data[nextIndex + 1];
         const b2 = data[nextIndex + 2];
         
-        const contrast = Math.abs((r1 + g1 + b1) - (r2 + g2 + b2)) / 3;
+        const lum1 = getRelativeLuminance(r1, g1, b1);
+        const lum2 = getRelativeLuminance(r2, g2, b2);
+        const ratio = getContrastRatio(lum1, lum2);
         
-        if (contrast < 30) {
-            lowContrastAreas++;
+        results.ratios.push(ratio);
+        
+        // Test against all thresholds
+        if (ratio >= results.AA_normal.threshold) {
+            results.AA_normal.pass++;
+        } else {
+            results.AA_normal.fail++;
+        }
+        
+        if (ratio >= results.AA_large.threshold) {
+            results.AA_large.pass++;
+        } else {
+            results.AA_large.fail++;
+        }
+        
+        if (ratio >= results.AAA_normal.threshold) {
+            results.AAA_normal.pass++;
+        } else {
+            results.AAA_normal.fail++;
+        }
+        
+        if (ratio >= results.AAA_large.threshold) {
+            results.AAA_large.pass++;
+        } else {
+            results.AAA_large.fail++;
+        }
+        
+        if (ratio >= results.nonText.threshold) {
+            results.nonText.pass++;
+        } else {
+            results.nonText.fail++;
         }
     }
     
-    const contrastRatio = lowContrastAreas / (data.length / (sampleSize * 4));
+    // Calculate statistics
+    results.avgRatio = results.ratios.reduce((a, b) => a + b, 0) / results.ratios.length;
+    results.minRatio = Math.min(...results.ratios);
+    results.maxRatio = Math.max(...results.ratios);
     
-    if (contrastRatio > 0.3) {
-        issues.push(`Potential contrast issues detected. ${Math.round(contrastRatio * 100)}% of sampled areas may have insufficient contrast for ${getDisabilityLabel(type)}.`);
+    return results;
+}
+
+function analyzeColorContrast(data, type) {
+    const issues = [];
+    const results = analyzeWCAGContrast(data);
+    
+    // Calculate pass rates
+    const totalSamples = results.AA_normal.pass + results.AA_normal.fail;
+    const aaPassRate = (results.AA_normal.pass / totalSamples) * 100;
+    const aaaPassRate = (results.AAA_normal.pass / totalSamples) * 100;
+    
+    // Generate detailed report
+    issues.push(`Average contrast ratio: ${results.avgRatio.toFixed(2)}:1 (Min: ${results.minRatio.toFixed(2)}:1, Max: ${results.maxRatio.toFixed(2)}:1)`);
+    
+    if (aaPassRate < 70) {
+        issues.push(`⚠️ WCAG AA Normal Text (4.5:1): Only ${aaPassRate.toFixed(0)}% of sampled areas pass. Significant contrast issues for ${getDisabilityLabel(type)}.`);
+    } else if (aaPassRate < 90) {
+        issues.push(`⚠️ WCAG AA Normal Text (4.5:1): ${aaPassRate.toFixed(0)}% pass rate. Some areas may have insufficient contrast.`);
+    } else {
+        issues.push(`✓ WCAG AA Normal Text (4.5:1): ${aaPassRate.toFixed(0)}% pass rate. Good contrast for most content.`);
+    }
+    
+    if (aaaPassRate < 50) {
+        issues.push(`WCAG AAA Normal Text (7:1): ${aaaPassRate.toFixed(0)}% pass rate. Enhanced contrast recommended for critical content.`);
+    } else {
+        issues.push(`✓ WCAG AAA Normal Text (7:1): ${aaaPassRate.toFixed(0)}% pass rate. Excellent contrast detected.`);
     }
     
     return issues;
@@ -646,23 +744,25 @@ function analyzeColorContrast(data, type) {
 
 function analyzeGrayscaleContrast(data) {
     const issues = [];
+    const results = analyzeWCAGContrast(data);
     
-    // Check if image already has good grayscale contrast
-    let totalContrast = 0;
-    const sampleSize = 100;
-    let sampleCount = 0;
+    const totalSamples = results.AA_normal.pass + results.AA_normal.fail;
+    const aaPassRate = (results.AA_normal.pass / totalSamples) * 100;
+    const aaLargePassRate = (results.AA_large.pass / totalSamples) * 100;
+    const aaaPassRate = (results.AAA_normal.pass / totalSamples) * 100;
     
-    for (let i = 0; i < data.length - 400; i += sampleSize * 4) {
-        const gray1 = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        const gray2 = 0.299 * data[i + 400] + 0.587 * data[i + 401] + 0.114 * data[i + 402];
-        totalContrast += Math.abs(gray1 - gray2);
-        sampleCount++;
+    issues.push(`Average grayscale contrast: ${results.avgRatio.toFixed(2)}:1`);
+    
+    if (aaPassRate < 60) {
+        issues.push(`⚠️ Critical: Only ${aaPassRate.toFixed(0)}% meets WCAG AA (4.5:1). Content is difficult to distinguish for users with total color blindness.`);
+    } else if (aaPassRate < 85) {
+        issues.push(`⚠️ WCAG AA (4.5:1): ${aaPassRate.toFixed(0)}% pass rate. Some content may be challenging in grayscale.`);
+    } else {
+        issues.push(`✓ WCAG AA (4.5:1): ${aaPassRate.toFixed(0)}% pass rate. Good grayscale contrast.`);
     }
     
-    const avgContrast = totalContrast / sampleCount;
-    
-    if (avgContrast < 20) {
-        issues.push('Low grayscale contrast detected. Content may be difficult to distinguish for users with total color blindness.');
+    if (aaaPassRate >= 70) {
+        issues.push(`✓ WCAG AAA (7:1): ${aaaPassRate.toFixed(0)}% pass rate. Excellent contrast for grayscale viewing.`);
     }
     
     return issues;
@@ -711,31 +811,59 @@ function analyzePhotosensitivity(data) {
 
 function analyzeLowContrastIssues(data) {
     const issues = [];
+    const results = analyzeWCAGContrast(data);
     
-    // Analyze overall contrast ratios
-    let contrastSum = 0;
-    let sampleCount = 0;
+    const totalSamples = results.AA_normal.pass + results.AA_normal.fail;
     
-    for (let i = 0; i < data.length - 4; i += 100) {
-        const lum1 = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        const lum2 = 0.299 * data[i + 4] + 0.587 * data[i + 5] + 0.114 * data[i + 6];
-        
-        const lighter = Math.max(lum1, lum2);
-        const darker = Math.min(lum1, lum2);
-        const contrastRatio = (lighter + 0.05) / (darker + 0.05);
-        
-        contrastSum += contrastRatio;
-        sampleCount++;
+    // Calculate pass rates for each WCAG level
+    const aaPassRate = (results.AA_normal.pass / totalSamples) * 100;
+    const aaLargePassRate = (results.AA_large.pass / totalSamples) * 100;
+    const aaaPassRate = (results.AAA_normal.pass / totalSamples) * 100;
+    const aaaLargePassRate = (results.AAA_large.pass / totalSamples) * 100;
+    const nonTextPassRate = (results.nonText.pass / totalSamples) * 100;
+    
+    issues.push(`**Contrast Analysis Summary**`);
+    issues.push(`Average ratio: ${results.avgRatio.toFixed(2)}:1 (Range: ${results.minRatio.toFixed(2)}:1 - ${results.maxRatio.toFixed(2)}:1)`);
+    issues.push(``);
+    
+    // WCAG AA - Normal Text (4.5:1)
+    if (aaPassRate < 60) {
+        issues.push(`❌ WCAG AA Normal Text (4.5:1): ${aaPassRate.toFixed(0)}% pass - FAILS. Text readability severely compromised.`);
+    } else if (aaPassRate < 85) {
+        issues.push(`⚠️ WCAG AA Normal Text (4.5:1): ${aaPassRate.toFixed(0)}% pass - Marginal. Improve contrast for better accessibility.`);
+    } else {
+        issues.push(`✓ WCAG AA Normal Text (4.5:1): ${aaPassRate.toFixed(0)}% pass - PASSES. Minimum standard met.`);
     }
     
-    const avgContrast = contrastSum / sampleCount;
-    
-    if (avgContrast < 3) {
-        issues.push('Overall contrast is very low. Text and UI elements may be difficult to read. WCAG AA requires 4.5:1 for normal text.');
-    } else if (avgContrast < 4.5) {
-        issues.push('Contrast is below WCAG AA standard (4.5:1). Consider increasing contrast for better readability.');
+    // WCAG AA - Large Text (3:1)
+    if (aaLargePassRate >= 85) {
+        issues.push(`✓ WCAG AA Large Text (3:1): ${aaLargePassRate.toFixed(0)}% pass - PASSES. Large text (18pt+/14pt+ bold) has sufficient contrast.`);
     } else {
-        issues.push('Contrast levels appear adequate for most users. Ensure text maintains minimum 4.5:1 ratio.');
+        issues.push(`⚠️ WCAG AA Large Text (3:1): ${aaLargePassRate.toFixed(0)}% pass - Some large text may lack contrast.`);
+    }
+    
+    // WCAG AAA - Normal Text (7:1)
+    if (aaaPassRate >= 75) {
+        issues.push(`✓ WCAG AAA Normal Text (7:1): ${aaaPassRate.toFixed(0)}% pass - PASSES. Enhanced contrast for critical content.`);
+    } else if (aaaPassRate >= 50) {
+        issues.push(`⚠️ WCAG AAA Normal Text (7:1): ${aaaPassRate.toFixed(0)}% pass - Consider enhancing contrast for AAA compliance.`);
+    } else {
+        issues.push(`WCAG AAA Normal Text (7:1): ${aaaPassRate.toFixed(0)}% pass - Enhanced contrast recommended for critical applications.`);
+    }
+    
+    // WCAG AAA - Large Text (4.5:1)
+    if (aaaLargePassRate >= 85) {
+        issues.push(`✓ WCAG AAA Large Text (4.5:1): ${aaaLargePassRate.toFixed(0)}% pass - PASSES.`);
+    }
+    
+    // Non-text Elements (3:1)
+    issues.push(``);
+    if (nonTextPassRate >= 85) {
+        issues.push(`✓ Non-Text Elements (3:1): ${nonTextPassRate.toFixed(0)}% pass - PASSES. UI components and graphics have adequate contrast.`);
+    } else if (nonTextPassRate >= 70) {
+        issues.push(`⚠️ Non-Text Elements (3:1): ${nonTextPassRate.toFixed(0)}% pass - Some UI elements may lack sufficient contrast.`);
+    } else {
+        issues.push(`❌ Non-Text Elements (3:1): ${nonTextPassRate.toFixed(0)}% pass - FAILS. Icons, buttons, and UI elements need better contrast.`);
     }
     
     return issues;
