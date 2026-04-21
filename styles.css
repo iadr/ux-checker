@@ -116,6 +116,11 @@ header p {
 }
 
 /* Disability Categories */
+.category-items input[type="checkbox"],
+.category-items input[type="radio"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
 .disability-category {
     background: white;
     border: 1px solid var(--border);
