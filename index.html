@@ -100,10 +100,16 @@
         <!-- Right Column: Image Drop Zone & Results -->
         <section class="display-panel">
             <div id="dropZone" class="drop-zone">
-                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/>
-                </svg>
-                <p>Drop image here or click to upload</p>
+                <div class="upload-prompt">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7l-5-5-5 5m5-5v12"/>
+                    </svg>
+                    <p>Drop image here or click to upload</p>
+                </div>
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <canvas id="previewCanvas"></canvas>
+                    <p class="preview-filename" id="previewFilename"></p>
+                </div>
                 <input type="file" id="fileInput" accept="image/*" hidden>
             </div>
 

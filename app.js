@@ -77,12 +77,86 @@ function loadImage(file) {
         const img = new Image();
         img.onload = () => {
             currentImage = img;
-            document.getElementById('dropZone').style.display = 'none';
+            
+            // Make drop zone compact
+            const dropZone = document.getElementById('dropZone');
+            dropZone.classList.add('compact');
+            
+            // Show preview
+            const preview = document.getElementById('imagePreview');
+            const previewCanvas = document.getElementById('previewCanvas');
+            const previewFilename = document.getElementById('previewFilename');
+            
+            preview.style.display = 'flex';
+            previewFilename.textContent = file.name;
+            
+            // Render thumbnail
+            const ctx = previewCanvas.getContext('2d');
+            const maxWidth = 120;
+            const maxHeight = 80;
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+            
+            previewCanvas.width = width;
+            previewCanvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Show uploaded image in results area immediately
+            showUploadedImage();
+            
             document.getElementById('analyzeButton').disabled = false;
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+function showUploadedImage() {
+    const resultsContainer = document.getElementById('resultsContainer');
+    const singleResult = document.getElementById('singleResult');
+    const completeResult = document.getElementById('completeResult');
+    
+    resultsContainer.style.display = 'block';
+    
+    if (analysisMode === 'single') {
+        singleResult.style.display = 'block';
+        completeResult.style.display = 'none';
+        
+        // Show original image only
+        const processedCanvas = document.getElementById('processedCanvas');
+        renderOriginal(currentImage, processedCanvas);
+        
+        const originalCanvasSmall = document.getElementById('originalCanvasSmall');
+        renderOriginal(currentImage, originalCanvasSmall);
+        
+        // Hide slider initially
+        document.getElementById('sliderContainer').style.display = 'none';
+        document.querySelector('.comparison-wrapper').style.display = 'flex';
+    } else {
+        singleResult.style.display = 'none';
+        completeResult.style.display = 'block';
+        
+        // Show original image in grid
+        const grid = document.querySelector('.analysis-grid');
+        grid.innerHTML = '';
+        const originalItem = createAnalysisItem('Original', currentImage, null);
+        grid.appendChild(originalItem);
+    }
+    
+    // Clear previous report
+    document.getElementById('reportContent').innerHTML = '<p style="color: var(--text-secondary); font-style: italic;">Click "Analyze Image" to generate accessibility report.</p>';
 }
 
 // Analysis type handling
@@ -709,7 +783,16 @@ function getDisabilityDescription(disability) {
 // Reset function
 function resetApp() {
     currentImage = null;
-    document.getElementById('dropZone').style.display = 'flex';
+    
+    // Reset drop zone
+    const dropZone = document.getElementById('dropZone');
+    dropZone.classList.remove('compact');
+    dropZone.style.display = 'flex';
+    
+    // Hide preview
+    const preview = document.getElementById('imagePreview');
+    preview.style.display = 'none';
+    
     document.getElementById('resultsContainer').style.display = 'none';
     document.getElementById('fileInput').value = '';
     document.getElementById('analyzeButton').disabled = true;
